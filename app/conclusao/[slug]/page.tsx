@@ -1,0 +1,77 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import { ChallengeForm } from "@/components/challenge-form";
+import { getChallengeBySlug } from "@/lib/challenges";
+
+type ChallengePageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+export function generateStaticParams() {
+  return [];
+}
+
+export async function generateMetadata({
+  params,
+}: ChallengePageProps): Promise<Metadata> {
+  const challenge = getChallengeBySlug(params.slug);
+  const title = challenge
+    ? `${challenge.name} | Registro de conclusao`
+    : "Desafio nao encontrado";
+  const description = challenge
+    ? `Envie seu print e confirme sua conclusao do ${challenge.name}.`
+    : "O desafio informado nao foi encontrado.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+  };
+}
+
+export default function ChallengePage({ params }: ChallengePageProps) {
+  const challenge = getChallengeBySlug(params.slug);
+
+  if (!challenge) {
+    notFound();
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 px-4 py-12 text-slate-800">
+      <div className="mx-auto flex max-w-4xl flex-col items-center">
+        <div className="w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl sm:p-10">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <Image
+              src="https://assets.zyrosite.com/jGNC2Ddl2JvsPJ0n/japa-sem-fundo-jNOUaM6FKlXFnQyz.png"
+              alt="Logo Desafio da Japa"
+              width={95}
+              height={95}
+              className="drop-shadow-xl"
+              priority
+            />
+            <p className="text-xs uppercase tracking-[0.25em] text-emerald-600">
+              Desafio Virtual
+            </p>
+            <h1 className="text-2xl font-semibold text-slate-900">
+              {challenge.name}
+            </h1>
+            <p className="text-sm text-slate-600">
+              Preencha os dados abaixo para registrar a conclusao do seu
+              desafio.
+            </p>
+          </div>
+
+          <div className="mt-8">
+            <ChallengeForm slug={params.slug} challengeName={challenge.name} />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+}
