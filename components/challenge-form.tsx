@@ -316,7 +316,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
 
           <div>
             <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
-              <span>Numero do pedido (Nuvemshop)</span>
+              <span>Numero do pedido na loja</span>
               <input
                 type="text"
                 autoComplete="off"
