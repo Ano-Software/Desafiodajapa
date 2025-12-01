@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+Ôªøimport type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { ChallengeForm } from "@/components/challenge-form";
@@ -12,10 +12,10 @@ type PageProps = {
 export function generateMetadata({ params }: PageProps): Metadata {
   const decodedSlug = decodeURIComponent(params.slug || "");
   const challengeName =
-    decodedSlug.trim() || "Desafio virtual ∑ Conclus„o de prova";
+    decodedSlug.trim() || "Desafio virtual ¬∑ Conclus√£o de prova";
 
   return {
-    title: `${challengeName} ∑ Conclus„o | Desafio da Japa`,
+    title: `${challengeName} ¬∑ Conclus√£o | Desafio da Japa`,
     description:
       "Envie o comprovante da sua corrida virtual para concluir o desafio e registrar sua conquista.",
   };
@@ -24,7 +24,7 @@ export function generateMetadata({ params }: PageProps): Metadata {
 export default function ChallengeConclusionPage({ params }: PageProps) {
   const rawSlug = params.slug;
 
-  // Se realmente n„o tiver slug na URL (caso extremo), 404.
+  // Em caso extremo de URL sem slug, retorna 404
   if (!rawSlug) {
     notFound();
   }
@@ -44,14 +44,14 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
           <div className="rounded-3xl bg-white/80 shadow-xl shadow-slate-200 border border-slate-200 px-6 py-8 sm:px-10 sm:py-10 backdrop-blur">
             <div className="mb-8 text-center">
               <p className="text-xs font-semibold tracking-[0.3em] text-emerald-500 uppercase">
-                Conclus„o de desafio
+                Conclus√£o de desafio
               </p>
               <h1 className="mt-3 text-2xl sm:text-3xl font-bold text-slate-900">
                 {challenge.name}
               </h1>
               <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
                 Preencha os dados abaixo e envie o print do seu Strava para
-                registrar a conclus„o deste desafio virtual. Seu resultado ser·
+                registrar a conclus√£o deste desafio virtual. Seu resultado ser√°
                 salvo no sistema do grupo de corridas Superando Limites.
               </p>
             </div>
@@ -59,9 +59,9 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
             <ChallengeForm challenge={challenge} slug={challenge.slug} />
 
             <p className="mt-6 text-[11px] sm:text-xs text-slate-500 text-center">
-              Dica: use exatamente este link na p·gina do produto/desafio da
+              Dica: use exatamente este link na p√°gina do produto/desafio da
               sua compra. Assim, ao clicar em &quot;Concluir desafio&quot;, o
-              formul·rio j· abrir· com o nome correto do desafio.
+              formul√°rio j√° abrir√° com o nome correto do desafio.
             </p>
           </div>
         </div>
