@@ -48,13 +48,6 @@ const formatWhatsapp = (input: string) => {
 
 export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
   const challengeName = challenge?.name?.trim() || "Desafio Virtual";
-  let decodedSlug = "";
-  try {
-    decodedSlug = decodeURIComponent(slug);
-  } catch {
-    decodedSlug = slug;
-  }
-  const challengeSlugLabel = decodedSlug.trim() || slug || "desafio";
   const {
     register,
     handleSubmit,
@@ -198,12 +191,6 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
         <h2 className="mt-2 text-2xl font-semibold text-slate-900">
           {challengeName}
         </h2>
-        <p className="mt-1 text-sm text-slate-500">
-          Slug:{" "}
-          <span className="font-mono text-slate-700">
-            /conclusao/{challengeSlugLabel}
-          </span>
-        </p>
       </div>
 
       {status.type === "success" && (

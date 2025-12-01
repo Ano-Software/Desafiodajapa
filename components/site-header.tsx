@@ -7,29 +7,35 @@ const JAPA_LOGO =
 
 export function SiteHeader() {
   return (
-    <header className="flex items-center justify-center px-4 py-6 text-black">
-      <div className="flex flex-wrap items-center justify-center gap-4 rounded-3xl border border-black/10 bg-white/80 px-6 py-4 text-center shadow-xl shadow-black/10">
-        <Image
-          src={SUPERANDO_LOGO}
-          alt="Logo Superando Limites"
-          width={72}
-          height={72}
-          className="h-10 w-auto object-contain sm:h-12"
-          priority
-        />
-        <div className="flex flex-col items-center text-center leading-tight">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-black">
+    <header className="w-full border-b border-slate-200 bg-white/90 text-slate-900">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-5">
+        <div className="flex flex-1 items-center justify-start gap-2 sm:flex-none">
+          <Image
+            src={SUPERANDO_LOGO}
+            alt="Logo Superando Limites"
+            width={72}
+            height={72}
+            className="h-10 w-auto object-contain sm:h-12"
+            priority
+          />
+        </div>
+        <div className="flex flex-col items-center justify-center text-center leading-tight">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-slate-900">
             Superando Limites
           </p>
-          <p className="text-base font-semibold text-black">Grupo de Corridas</p>
+          <p className="text-base font-semibold text-slate-900">
+            Grupo de Corridas
+          </p>
         </div>
-        <Image
-          src={JAPA_LOGO}
-          alt="Logo Desafio da Japa"
-          width={40}
-          height={40}
-          className="h-10 w-auto object-contain sm:h-12"
-        />
+        <div className="flex flex-1 items-center justify-end gap-2 sm:flex-none">
+          <Image
+            src={JAPA_LOGO}
+            alt="Logo Desafio da Japa"
+            width={48}
+            height={48}
+            className="h-10 w-auto object-contain sm:h-12"
+          />
+        </div>
       </div>
     </header>
   );
