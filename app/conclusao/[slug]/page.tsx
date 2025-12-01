@@ -1,35 +1,17 @@
-﻿import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { SiteHeader } from "@/components/site-header";
+﻿import { SiteHeader } from "@/components/site-header";
 import { ChallengeForm } from "@/components/challenge-form";
 
 type PageProps = {
   params: {
-    slug: string;
+    slug?: string;
   };
 };
 
-export function generateMetadata({ params }: PageProps): Metadata {
-  const decodedSlug = decodeURIComponent(params.slug || "");
-  const challengeName =
-    decodedSlug.trim() || "Desafio virtual · Conclusão de prova";
-
-  return {
-    title: `${challengeName} · Conclusão | Desafio da Japa`,
-    description:
-      "Envie o comprovante da sua corrida virtual para concluir o desafio e registrar sua conquista.",
-  };
-}
-
 export default function ChallengeConclusionPage({ params }: PageProps) {
-  const rawSlug = params.slug;
-
-  // Em caso extremo de URL sem slug, retorna 404
-  if (!rawSlug) {
-    notFound();
-  }
-
+  // garante que sempre temos uma string
+  const rawSlug = params.slug ?? "";
   const decodedSlug = decodeURIComponent(rawSlug);
+
   const challenge = {
     slug: rawSlug,
     name: decodedSlug.trim() || "Desafio virtual",
