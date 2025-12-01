@@ -6,9 +6,14 @@ import { Loader2, CheckCircle2, AlertCircle, Upload } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { getSupabaseBrowserClient } from "@/lib/supabase-client";
 
+type ChallengeInfo = {
+  slug: string;
+  name: string;
+};
+
 type ChallengeFormProps = {
   slug: string;
-  challengeName: string;
+  challenge: ChallengeInfo;
 };
 
 type FormValues = {
@@ -41,7 +46,8 @@ const formatWhatsapp = (input: string) => {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 };
 
-export function ChallengeForm({ slug, challengeName }: ChallengeFormProps) {
+export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
+  const challengeName = challenge?.name?.trim() || "Desafio Virtual";
   const {
     register,
     handleSubmit,

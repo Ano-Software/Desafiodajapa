@@ -1,88 +1,71 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { notFound } from "next/navigation";
+import { SiteHeader } from "@/components/site-header";
 import { ChallengeForm } from "@/components/challenge-form";
 
-type ChallengePageProps = {
+type PageProps = {
   params: {
     slug: string;
   };
 };
 
-export function generateStaticParams() {
-  return [];
-}
-
-export async function generateMetadata({
-  params,
-}: ChallengePageProps): Promise<Metadata> {
-  const slug = params.slug ?? "";
-  let decodedSlug = "";
-
-  try {
-    decodedSlug = decodeURIComponent(slug);
-  } catch {
-    decodedSlug = slug;
-  }
-
-  const challengeName = decodedSlug || "Desafio Virtual";
-  const title = `${challengeName} | Registro de conclusao`;
-  const description = `Envie seu print e confirme sua conclusao do ${challengeName}.`;
+export function generateMetadata({ params }: PageProps): Metadata {
+  const decodedSlug = decodeURIComponent(params.slug || "");
+  const challengeName =
+    decodedSlug.trim() || "Desafio virtual · Conclusão de prova";
 
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-    },
+    title: `${challengeName} · Conclusão | Desafio da Japa`,
+    description:
+      "Envie o comprovante da sua corrida virtual para concluir o desafio e registrar sua conquista.",
   };
 }
 
-export default function ChallengePage({ params }: ChallengePageProps) {
-  const slug = params.slug ?? "";
-  let decodedSlug = "";
+export default function ChallengeConclusionPage({ params }: PageProps) {
+  const rawSlug = params.slug;
 
-  try {
-    decodedSlug = decodeURIComponent(slug);
-  } catch {
-    decodedSlug = slug;
+  // Se realmente não tiver slug na URL (caso extremo), 404.
+  if (!rawSlug) {
+    notFound();
   }
 
+  const decodedSlug = decodeURIComponent(rawSlug);
   const challenge = {
-    slug,
-    name: decodedSlug || "Desafio Virtual",
+    slug: rawSlug,
+    name: decodedSlug.trim() || "Desafio virtual",
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 px-4 py-12 text-slate-800">
-      <div className="mx-auto flex max-w-4xl flex-col items-center">
-        <div className="w-full rounded-3xl border border-slate-200 bg-white p-8 shadow-xl sm:p-10">
-          <div className="flex flex-col items-center text-center space-y-4">
-            <Image
-              src="https://assets.zyrosite.com/jGNC2Ddl2JvsPJ0n/japa-sem-fundo-jNOUaM6FKlXFnQyz.png"
-              alt="Logo Desafio da Japa"
-              width={95}
-              height={95}
-              className="drop-shadow-xl"
-              priority
-            />
-            <p className="text-xs uppercase tracking-[0.25em] text-emerald-600">
-              Desafio Virtual
-            </p>
-            <h1 className="text-2xl font-semibold text-slate-900">
-              {challenge.name}
-            </h1>
-            <p className="text-sm text-slate-600">
-              Preencha os dados abaixo para registrar a conclusao do seu
-              desafio.
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200 text-slate-900">
+      <SiteHeader />
 
-          <div className="mt-8">
-            <ChallengeForm challenge={challenge} slug={slug} />
+      <main className="flex items-center justify-center px-4 py-10">
+        <div className="w-full max-w-3xl">
+          <div className="rounded-3xl bg-white/80 shadow-xl shadow-slate-200 border border-slate-200 px-6 py-8 sm:px-10 sm:py-10 backdrop-blur">
+            <div className="mb-8 text-center">
+              <p className="text-xs font-semibold tracking-[0.3em] text-emerald-500 uppercase">
+                Conclusão de desafio
+              </p>
+              <h1 className="mt-3 text-2xl sm:text-3xl font-bold text-slate-900">
+                {challenge.name}
+              </h1>
+              <p className="mt-2 text-sm sm:text-base text-slate-600 max-w-xl mx-auto">
+                Preencha os dados abaixo e envie o print do seu Strava para
+                registrar a conclusão deste desafio virtual. Seu resultado será
+                salvo no sistema do grupo de corridas Superando Limites.
+              </p>
+            </div>
+
+            <ChallengeForm challenge={challenge} slug={challenge.slug} />
+
+            <p className="mt-6 text-[11px] sm:text-xs text-slate-500 text-center">
+              Dica: use exatamente este link na página do produto/desafio da
+              sua compra. Assim, ao clicar em &quot;Concluir desafio&quot;, o
+              formulário já abrirá com o nome correto do desafio.
+            </p>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
