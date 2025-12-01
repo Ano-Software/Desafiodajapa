@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { ChallengeForm } from "@/components/challenge-form";
-import { getChallengeBySlug } from "@/lib/challenges";
 
 type ChallengePageProps = {
   params: {
@@ -17,13 +15,18 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: ChallengePageProps): Promise<Metadata> {
-  const challenge = getChallengeBySlug(params.slug);
-  const title = challenge
-    ? `${challenge.name} | Registro de conclusao`
-    : "Desafio nao encontrado";
-  const description = challenge
-    ? `Envie seu print e confirme sua conclusao do ${challenge.name}.`
-    : "O desafio informado nao foi encontrado.";
+  const slug = params.slug ?? "";
+  let decodedSlug = "";
+
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    decodedSlug = slug;
+  }
+
+  const challengeName = decodedSlug || "Desafio Virtual";
+  const title = `${challengeName} | Registro de conclusao`;
+  const description = `Envie seu print e confirme sua conclusao do ${challengeName}.`;
 
   return {
     title,
@@ -36,11 +39,19 @@ export async function generateMetadata({
 }
 
 export default function ChallengePage({ params }: ChallengePageProps) {
-  const challenge = getChallengeBySlug(params.slug);
+  const slug = params.slug ?? "";
+  let decodedSlug = "";
 
-  if (!challenge) {
-    notFound();
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    decodedSlug = slug;
   }
+
+  const challenge = {
+    slug,
+    name: decodedSlug || "Desafio Virtual",
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 px-4 py-12 text-slate-800">
@@ -68,7 +79,7 @@ export default function ChallengePage({ params }: ChallengePageProps) {
           </div>
 
           <div className="mt-8">
-            <ChallengeForm slug={params.slug} challengeName={challenge.name} />
+            <ChallengeForm challenge={challenge} slug={slug} />
           </div>
         </div>
       </div>
