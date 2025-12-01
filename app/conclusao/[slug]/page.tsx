@@ -10,7 +10,12 @@ type PageProps = {
 export default function ChallengeConclusionPage({ params }: PageProps) {
   // garante que sempre temos uma string
   const rawSlug = params.slug ?? "";
-  const decodedSlug = decodeURIComponent(rawSlug);
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(rawSlug);
+  } catch {
+    decodedSlug = rawSlug;
+  }
 
   const challenge = {
     slug: rawSlug,

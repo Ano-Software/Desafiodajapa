@@ -48,6 +48,13 @@ const formatWhatsapp = (input: string) => {
 
 export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
   const challengeName = challenge?.name?.trim() || "Desafio Virtual";
+  let decodedSlug = "";
+  try {
+    decodedSlug = decodeURIComponent(slug);
+  } catch {
+    decodedSlug = slug;
+  }
+  const challengeSlugLabel = decodedSlug.trim() || slug || "desafio";
   const {
     register,
     handleSubmit,
@@ -193,7 +200,9 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
         </h2>
         <p className="mt-1 text-sm text-slate-500">
           Slug:{" "}
-          <span className="font-mono text-slate-700">/conclusao/{slug}</span>
+          <span className="font-mono text-slate-700">
+            /conclusao/{challengeSlugLabel}
+          </span>
         </p>
       </div>
 
@@ -215,17 +224,6 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
-            <span>Desafio</span>
-            <input
-              value={challengeName}
-              readOnly
-              className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base font-semibold text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
-            />
-          </label>
-        </div>
-
         <div>
           <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
             <span>Nome completo</span>

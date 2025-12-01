@@ -7,32 +7,29 @@ const JAPA_LOGO =
 
 export function SiteHeader() {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-white/15 bg-white/5 px-5 py-4 text-sm shadow-2xl shadow-black/30 backdrop-blur">
-      <div className="flex items-center gap-3">
+    <header className="flex items-center justify-center px-4 py-6 text-black">
+      <div className="flex flex-wrap items-center justify-center gap-4 rounded-3xl border border-black/10 bg-white/80 px-6 py-4 text-center shadow-xl shadow-black/10">
         <Image
           src={SUPERANDO_LOGO}
           alt="Logo Superando Limites"
           width={72}
           height={72}
-          className="h-14 w-auto object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.45)]"
+          className="h-10 w-auto object-contain sm:h-12"
           priority
         />
-        <div className="leading-tight">
-          <p className="text-xs uppercase tracking-[0.3em] text-emerald-200/80">
+        <div className="flex flex-col items-center text-center leading-tight">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-black">
             Superando Limites
           </p>
-          <p className="text-base font-semibold text-white">Grupo de Corridas</p>
+          <p className="text-base font-semibold text-black">Grupo de Corridas</p>
         </div>
-      </div>
-      <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-xs uppercase tracking-wide text-white/80">
         <Image
           src={JAPA_LOGO}
           alt="Logo Desafio da Japa"
           width={40}
           height={40}
-          className="h-9 w-auto object-contain"
+          className="h-10 w-auto object-contain sm:h-12"
         />
-        <span>Desafio da Japa</span>
       </div>
     </header>
   );
