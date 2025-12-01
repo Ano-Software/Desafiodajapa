@@ -189,7 +189,7 @@ export default function ChallengeConclusionPage({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <main className="mx-auto flex min-h-screen max-w-5xl items-center justify-center px-4 py-12">
+      <main className="mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-4 py-12 space-y-4">
         <div className="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white/95 p-8 shadow-xl shadow-slate-200/70 sm:p-10">
           <div className="flex flex-col items-center text-center">
             <Image
@@ -412,6 +412,12 @@ export default function ChallengeConclusionPage({
             </button>
           </form>
         </div>
+        <a
+          href="/admin/login"
+          className="text-xs text-slate-400 underline decoration-dotted hover:text-slate-500"
+        >
+          admin
+        </a>
       </main>
     </div>
   );
