@@ -51,6 +51,12 @@ export default function Home() {
           </a>
         </div>
       </div>
+      <a
+        href="/admin/login"
+        className="absolute bottom-4 left-4 text-[10px] text-slate-400/70 underline decoration-dotted hover:text-slate-400"
+      >
+        admin
+      </a>
     </main>
   );
 }
