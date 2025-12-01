@@ -8,51 +8,44 @@ type PageProps = {
   };
 };
 
-const DEFAULT_CHALLENGE_NAME = "Desafio virtual";
 const JAPA_LOGO =
   "https://assets.zyrosite.com/jGNC2Ddl2JvsPJ0n/japa-sem-fundo-jNOUaM6FKlXFnQyz.png";
 
-function formatChallengeNameFromSlug(slug?: string) {
-  if (!slug) return DEFAULT_CHALLENGE_NAME;
+function getChallengeName(slug?: string): string {
+  if (!slug) return "Desafio virtual";
 
-  let decoded = "";
   try {
-    decoded = decodeURIComponent(slug);
+    const decoded = decodeURIComponent(slug);
+    return decoded
+      .split("-")
+      .filter(Boolean)
+      .map(
+        (word) =>
+          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(" ");
   } catch {
-    decoded = slug;
+    return "Desafio virtual";
   }
-
-  const cleaned = decoded
-    .replace(/[-_]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (!cleaned) return DEFAULT_CHALLENGE_NAME;
-
-  return cleaned
-    .split(" ")
-    .map((word) => {
-      if (!word) return "";
-      const lower = word.toLowerCase();
-      return lower.charAt(0).toUpperCase() + lower.slice(1);
-    })
-    .join(" ");
 }
 
 export function generateMetadata({ params }: PageProps): Metadata {
-  const challengeName = formatChallengeNameFromSlug(params.slug);
+  const challengeName = getChallengeName(params.slug);
   return {
     title: `${challengeName} | Conclusao de desafio`,
     description: `Envie seu print e confirme a conclusao do ${challengeName} no Desafio da Japa / Superando Limites.`,
   };
 }
 
-export default function ChallengeConclusionPage({ params }: PageProps) {
-  const rawSlug = params.slug ?? "";
-  const challengeName = formatChallengeNameFromSlug(rawSlug);
+export default function ChallengeConclusionPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const challengeName = getChallengeName(params.slug);
 
   const challenge = {
-    slug: rawSlug,
+    slug: params.slug ?? "",
     name: challengeName,
   };
 
