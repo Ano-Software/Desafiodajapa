@@ -4,7 +4,21 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 export async function GET() {
   const { data, error } = await supabaseAdmin
     .from("challenge_completions")
-    .select("*")
+    .select(
+      [
+        "id",
+        "challenge_name",
+        "challenge_slug",
+        "full_name",
+        "state",
+        "city",
+        "whatsapp",
+        "order_number",
+        "strava_screenshot_url",
+        "created_at",
+        "is_confirmed",
+      ].join(",")
+    )
     .order("created_at", { ascending: false });
 
   if (error) {
