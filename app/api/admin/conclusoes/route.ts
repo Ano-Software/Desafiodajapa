@@ -44,7 +44,7 @@ function isAuthorized(request: NextRequest) {
 }
 
 function unauthorizedResponse() {
-  return NextResponse.json({ error: "Nao autorizado." }, { status: 401 });
+  return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
 }
 
 function toCsv(rows: ChallengeCompletion[]) {
@@ -120,7 +120,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("GET /api/admin/conclusoes error:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel carregar as conclusoes." },
+      { error: "Não foi possível carregar as conclusões." },
       { status: 500 }
     );
   }
@@ -137,7 +137,7 @@ export async function PATCH(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: "O campo id eh obrigatorio." },
+        { error: "O campo id é obrigatório." },
         { status: 400 }
       );
     }
@@ -160,7 +160,7 @@ export async function PATCH(request: NextRequest) {
   } catch (error) {
     console.error("PATCH /api/admin/conclusoes error:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel arquivar a conclusao." },
+      { error: "Não foi possível arquivar a conclusão." },
       { status: 500 }
     );
   }
@@ -177,7 +177,7 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        { error: "O campo id eh obrigatorio." },
+        { error: "O campo id é obrigatório." },
         { status: 400 }
       );
     }
@@ -193,7 +193,7 @@ export async function DELETE(request: NextRequest) {
   } catch (error) {
     console.error("DELETE /api/admin/conclusoes error:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel excluir a conclusao." },
+      { error: "Não foi possível excluir a conclusão." },
       { status: 500 }
     );
   }

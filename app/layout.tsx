@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Superando Limites",
   },
   description:
-    "Registre a conclusao dos desafios virtuais do Desafio da Japa / Superando Limites.",
+    "Registre a conclusão dos desafios virtuais do Desafio da Japa / Superando Limites.",
   icons: {
     icon: "https://assets.zyrosite.com/jGNC2Ddl2JvsPJ0n/boneca-lNpHd0LlM5m34B8T.png",
   },

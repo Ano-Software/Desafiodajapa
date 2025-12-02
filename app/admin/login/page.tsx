@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 to-blue-100 px-4">
       <div className="w-full max-w-md rounded-2xl bg-slate-900/95 p-8 shadow-xl text-white">
         <div className="space-y-2 text-center">
-          <h1 className="text-2xl font-semibold">Login Admin - Desafio da Japa</h1>
+          <h1 className="text-2xl font-semibold">Login Admin – Desafio da Japa</h1>
           <p className="text-sm text-slate-300">
             Informe a senha do painel para acessar o administrador.
           </p>

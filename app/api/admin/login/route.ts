@@ -5,14 +5,14 @@ export async function POST(req: NextRequest) {
 
   if (!password) {
     return NextResponse.json(
-      { error: "Senha obrigatoria" },
+      { error: "Senha obrigatória" },
       { status: 400 }
     );
   }
 
   if (password !== process.env.ADMIN_PANEL_PASSWORD) {
     return NextResponse.json(
-      { error: "Senha invalida" },
+      { error: "Senha inválida" },
       { status: 401 }
     );
   }

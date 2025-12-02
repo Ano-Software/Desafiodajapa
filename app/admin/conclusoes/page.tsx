@@ -130,7 +130,7 @@ export default function AdminConclusoesPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Nao foi possivel atualizar o registro.");
+        throw new Error(json.error || "Não foi possível atualizar o registro.");
       }
 
       const updated = (json.data ?? {
@@ -145,7 +145,7 @@ export default function AdminConclusoesPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Nao foi possivel atualizar o registro.";
+          : "Não foi possível atualizar o registro.";
       setError(message);
     } finally {
       setUpdatingId(null);
@@ -154,7 +154,7 @@ export default function AdminConclusoesPage() {
 
   async function handleDelete(record: ChallengeCompletion) {
     const confirmation = window.confirm(
-      "Tem certeza que deseja excluir este registro? Essa acao nao podera ser desfeita."
+      "Tem certeza de que deseja excluir este registro? Essa ação não poderá ser desfeita."
     );
 
     if (!confirmation) {
@@ -172,7 +172,7 @@ export default function AdminConclusoesPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Nao foi possivel excluir o registro.");
+        throw new Error(json.error || "Não foi possível excluir o registro.");
       }
 
       setRecords((prev) => prev.filter((item) => item.id !== record.id));
@@ -180,7 +180,7 @@ export default function AdminConclusoesPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Nao foi possivel excluir o registro.";
+          : "Não foi possível excluir o registro.";
       setError(message);
     } finally {
       setDeletingId(null);
@@ -219,7 +219,7 @@ export default function AdminConclusoesPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <h1 className="text-3xl font-semibold text-slate-900">
-              Conclusoes de Desafios - Desafio da Japa
+              Conclusões de Desafios – Desafio da Japa
             </h1>
             <p className="text-base text-slate-500">
               Acompanhe os envios registrados na plataforma.
@@ -237,7 +237,7 @@ export default function AdminConclusoesPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="w-full sm:max-w-sm">
             <label className="mb-1 block text-sm font-medium text-slate-600">
-              Buscar por nome ou numero do pedido
+              Buscar por nome ou número do pedido
             </label>
             <input
               type="text"
@@ -276,10 +276,10 @@ export default function AdminConclusoesPage() {
                     <th className="px-4 py-3">Estado</th>
                     <th className="px-4 py-3">Cidade</th>
                     <th className="px-4 py-3">WhatsApp</th>
-                    <th className="px-4 py-3">Numero do pedido</th>
+                    <th className="px-4 py-3">Número do pedido</th>
                     <th className="px-4 py-3">Print Strava</th>
                     <th className="px-4 py-3 text-center">Status</th>
-                    <th className="px-4 py-3 text-center">Acoes</th>
+                    <th className="px-4 py-3 text-center">Ações</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
@@ -399,7 +399,7 @@ export default function AdminConclusoesPage() {
                     Anterior
                   </button>
                   <span>
-                    Pagina {totalRecords === 0 ? 0 : page} de{" "}
+                    Página {totalRecords === 0 ? 0 : page} de{" "}
                     {totalRecords === 0 ? 0 : totalPages}
                   </span>
                   <button
@@ -410,11 +410,11 @@ export default function AdminConclusoesPage() {
                     disabled={page >= totalPages || totalRecords === 0}
                     className="rounded-full border border-slate-300 px-4 py-1 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Proxima
+                    Próxima
                   </button>
                 </div>
                 <label className="flex items-center gap-2 text-sm">
-                  Por pagina
+                  Por página
                   <select
                     value={pageSize}
                     onChange={(event) => {

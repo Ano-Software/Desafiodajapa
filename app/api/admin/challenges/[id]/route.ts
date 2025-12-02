@@ -12,7 +12,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
   if (!id) {
     return NextResponse.json(
-      { error: "ID do desafio nao informado." },
+      { error: "ID do desafio não informado." },
       { status: 400 }
     );
   }
@@ -27,7 +27,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "Formato do corpo invalido." },
+      { error: "Formato do corpo inválido." },
       { status: 400 }
     );
   }
@@ -48,7 +48,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json(
-      { error: "Nenhum campo valido informado para atualizacao." },
+      { error: "Nenhum campo válido informado para atualização." },
       { status: 400 }
     );
   }
@@ -63,7 +63,7 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   if (error) {
     console.error("Erro ao atualizar admin_challenge:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel atualizar o desafio." },
+      { error: "Não foi possível atualizar o desafio." },
       { status: 500 }
     );
   }
@@ -76,7 +76,7 @@ export async function DELETE(_: NextRequest, context: RouteContext) {
 
   if (!id) {
     return NextResponse.json(
-      { error: "ID do desafio nao informado." },
+      { error: "ID do desafio não informado." },
       { status: 400 }
     );
   }
@@ -89,7 +89,7 @@ export async function DELETE(_: NextRequest, context: RouteContext) {
   if (error) {
     console.error("Erro ao excluir admin_challenge:", error);
     return NextResponse.json(
-      { error: "Nao foi possivel excluir o desafio." },
+      { error: "Não foi possível excluir o desafio." },
       { status: 500 }
     );
   }

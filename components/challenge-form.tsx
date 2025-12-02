@@ -86,7 +86,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
         const file = files?.[0];
         if (!file) return "Envie o print do Strava.";
         return (
-          file.size <= MAX_FILE_SIZE || "A imagem deve ter no maximo 5MB."
+          file.size <= MAX_FILE_SIZE || "A imagem deve ter no máximo 5MB."
         );
       },
       isImage: (files) => {
@@ -129,7 +129,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
 
       if (uploadError) {
         throw new Error(
-          `Nao foi possivel enviar sua imagem. (${uploadError.message})`
+          `Não foi possível enviar sua imagem. (${uploadError.message})`
         );
       }
 
@@ -152,7 +152,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
 
       if (insertError) {
         throw new Error(
-          `Nao foi possivel salvar suas informacoes. (${insertError.message})`
+          `Não foi possível salvar suas informações. (${insertError.message})`
         );
       }
 
@@ -171,7 +171,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
       const message =
         error instanceof Error
           ? error.message
-          : "Houve um problema ao registrar sua conclusao. Tente novamente.";
+          : "Houve um problema ao registrar sua conclusão. Tente novamente.";
       setStatus({ type: "error", message });
     } finally {
       setIsSubmitting(false);
@@ -193,7 +193,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
         <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
           <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden />
           <p>
-            Conclusao registrada com sucesso! Obrigado por participar do
+            Conclusão registrada com sucesso! Obrigado por participar do
             Desafio da Japa / Superando Limites.
           </p>
         </div>
@@ -313,12 +313,12 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
 
           <div>
             <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
-              <span>Numero do pedido na loja</span>
+              <span>Número do pedido na loja</span>
               <input
                 type="text"
                 autoComplete="off"
                 {...register("orderNumber", {
-                  required: "Informe o numero do pedido.",
+                  required: "Informe o número do pedido.",
                 })}
                 className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder-slate-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
               />
@@ -362,7 +362,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
                 )}
               </div>
               <p className="mt-2 text-xs text-slate-500">
-                Envie o print do Strava ou app de corrida (ate 5MB).
+                Envie o print do Strava ou app de corrida (até 5MB).
               </p>
             </div>
           </label>
@@ -384,7 +384,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
               Enviando...
             </>
           ) : (
-            "Enviar conclusao"
+            "Enviar conclusão"
           )}
         </button>
       </form>

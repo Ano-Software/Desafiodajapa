@@ -58,7 +58,7 @@ export default function AdminConfigPage() {
   async function handleAddChallenge(event: FormEvent) {
     event.preventDefault();
     if (!formName.trim() || !formSlug.trim()) {
-      setError("Nome e slug sao obrigatorios.");
+      setError("Nome e slug são obrigatórios.");
       return;
     }
 
@@ -74,7 +74,7 @@ export default function AdminConfigPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Nao foi possivel adicionar o desafio.");
+        throw new Error(json.error || "Não foi possível adicionar o desafio.");
       }
 
       setChallenges((prev) => [json.data, ...prev]);
@@ -84,7 +84,7 @@ export default function AdminConfigPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Nao foi possivel adicionar o desafio.";
+          : "Não foi possível adicionar o desafio.";
       setError(message);
     } finally {
       setFormLoading(false);
@@ -106,7 +106,7 @@ export default function AdminConfigPage() {
 
   async function saveEdit(challenge: AdminChallenge) {
     if (!editName.trim() || !editSlug.trim()) {
-      setError("Nome e slug sao obrigatorios.");
+      setError("Nome e slug são obrigatórios.");
       return;
     }
 
@@ -125,7 +125,7 @@ export default function AdminConfigPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Nao foi possivel atualizar o desafio.");
+        throw new Error(json.error || "Não foi possível atualizar o desafio.");
       }
 
       setChallenges((prev) =>
@@ -136,7 +136,7 @@ export default function AdminConfigPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Nao foi possivel atualizar o desafio.";
+          : "Não foi possível atualizar o desafio.";
       setError(message);
     } finally {
       setSavingId(null);
@@ -157,7 +157,7 @@ export default function AdminConfigPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Nao foi possivel atualizar o status.");
+        throw new Error(json.error || "Não foi possível atualizar o status.");
       }
 
       setChallenges((prev) =>
@@ -167,7 +167,7 @@ export default function AdminConfigPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Nao foi possivel atualizar o status.";
+          : "Não foi possível atualizar o status.";
       setError(message);
     } finally {
       setTogglingId(null);
@@ -189,10 +189,10 @@ export default function AdminConfigPage() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
             <h1 className="text-3xl font-semibold text-slate-900">
-              Configuracoes do Painel - Desafio da Japa
+              Configurações do Painel – Desafio da Japa
             </h1>
             <p className="text-base text-slate-500">
-              Gerencie os desafios e faca logout do painel.
+              Gerencie os desafios e faça logout do painel.
             </p>
           </div>
           <button
@@ -291,7 +291,7 @@ export default function AdminConfigPage() {
                     <th className="px-4 py-3">Nome</th>
                     <th className="px-4 py-3">Slug</th>
                     <th className="px-4 py-3">Status</th>
-                    <th className="px-4 py-3 text-center">Acoes</th>
+                     <th className="px-4 py-3 text-center">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -301,7 +301,7 @@ export default function AdminConfigPage() {
                         colSpan={4}
                         className="px-4 py-8 text-center text-slate-400"
                       >
-                        Nenhum desafio cadastrado ate o momento.
+                        Nenhum desafio cadastrado até o momento.
                       </td>
                     </tr>
                   )}
