@@ -43,7 +43,7 @@ const formatWhatsapp = (input: string) => {
 };
 
 export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
-  const challengeName = challenge?.name?.trim() || "Desafio Virtual";
+  const challengeName = challenge.name.trim();
   const {
     register,
     handleSubmit,
