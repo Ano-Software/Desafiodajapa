@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ChallengeCompletion = {
   id: string;
   challenge_name: string | null;
   challenge_slug: string | null;
   full_name: string;
-  state: string;
-  city: string;
-  whatsapp: string;
-  order_number: string;
+  state: string | null;
+  city: string | null;
+  whatsapp: string | null;
+  order_number: string | null;
   strava_screenshot_url: string | null;
   created_at: string;
   is_confirmed: boolean | null;
@@ -21,14 +22,16 @@ type ModalImage = {
   label: string;
 };
 
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
+
 const formatDateTime = (value: string) =>
   new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
     timeStyle: "short",
   }).format(new Date(value));
 
-const formatWhatsapp = (value: string) => {
-  if (!value) return "—";
+const formatWhatsapp = (value: string | null) => {
+  if (!value) return "-";
   const digits = value.replace(/\D/g, "");
   if (digits.length === 11) {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(
@@ -40,16 +43,51 @@ const formatWhatsapp = (value: string) => {
 };
 
 export default function AdminConclusoesPage() {
+  const router = useRouter();
   const [records, setRecords] = useState<ChallengeCompletion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<ModalImage | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     loadData();
   }, []);
+
+  const filteredRecords = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) {
+      return records;
+    }
+
+    return records.filter((record) => {
+      const fullName = record.full_name?.toLowerCase() ?? "";
+      const orderNumber = record.order_number?.toLowerCase() ?? "";
+      return fullName.includes(term) || orderNumber.includes(term);
+    });
+  }, [records, searchTerm]);
+
+  useEffect(() => {
+    const maxPage = Math.max(
+      1,
+      Math.ceil(filteredRecords.length / pageSize) || 1
+    );
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [filteredRecords.length, page, pageSize]);
+
+  const totalRecords = filteredRecords.length;
+  const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize) || 1);
+  const startIndex = (page - 1) * pageSize;
+  const pageItems = filteredRecords.slice(startIndex, startIndex + pageSize);
+  const displayStart = totalRecords === 0 ? 0 : startIndex + 1;
+  const displayEnd =
+    totalRecords === 0 ? 0 : Math.min(totalRecords, startIndex + pageItems.length);
 
   async function loadData() {
     setLoading(true);
@@ -92,7 +130,7 @@ export default function AdminConclusoesPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Não foi possível atualizar o registro.");
+        throw new Error(json.error || "Nao foi possivel atualizar o registro.");
       }
 
       const updated = (json.data ?? {
@@ -107,7 +145,7 @@ export default function AdminConclusoesPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Não foi possível atualizar o registro.";
+          : "Nao foi possivel atualizar o registro.";
       setError(message);
     } finally {
       setUpdatingId(null);
@@ -115,11 +153,11 @@ export default function AdminConclusoesPage() {
   }
 
   async function handleDelete(record: ChallengeCompletion) {
-    const confirmed = window.confirm(
-      "Tem certeza que deseja excluir este registro? Essa ação não poderá ser desfeita."
+    const confirmation = window.confirm(
+      "Tem certeza que deseja excluir este registro? Essa acao nao podera ser desfeita."
     );
 
-    if (!confirmed) {
+    if (!confirmation) {
       return;
     }
 
@@ -134,7 +172,7 @@ export default function AdminConclusoesPage() {
       const json = await response.json();
 
       if (!response.ok) {
-        throw new Error(json.error || "Não foi possível excluir o registro.");
+        throw new Error(json.error || "Nao foi possivel excluir o registro.");
       }
 
       setRecords((prev) => prev.filter((item) => item.id !== record.id));
@@ -142,10 +180,19 @@ export default function AdminConclusoesPage() {
       const message =
         err instanceof Error
           ? err.message
-          : "Não foi possível excluir o registro.";
+          : "Nao foi possivel excluir o registro.";
       setError(message);
     } finally {
       setDeletingId(null);
+    }
+  }
+
+  async function handleLogout() {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+    } finally {
+      router.push("/admin/login");
+      router.refresh();
     }
   }
 
@@ -161,17 +208,49 @@ export default function AdminConclusoesPage() {
     setSelectedImage(null);
   }
 
+  const emptyMessage =
+    searchTerm.trim().length > 0
+      ? "Nenhum registro encontrado para essa busca."
+      : "Nenhum registro encontrado.";
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900">
       <div className="mx-auto w-full max-w-6xl space-y-6">
-        <header className="space-y-2 text-center sm:text-left">
-          <h1 className="text-3xl font-semibold text-slate-900">
-            Conclusões de Desafios – Desafio da Japa
-          </h1>
-          <p className="text-base text-slate-500">
-            Acompanhe os envios registrados na plataforma.
-          </p>
+        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold text-slate-900">
+              Conclusoes de Desafios - Desafio da Japa
+            </h1>
+            <p className="text-base text-slate-500">
+              Acompanhe os envios registrados na plataforma.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="self-start rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+          >
+            Logout
+          </button>
         </header>
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="w-full sm:max-w-sm">
+            <label className="mb-1 block text-sm font-medium text-slate-600">
+              Buscar por nome ou numero do pedido
+            </label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(event) => {
+                setSearchTerm(event.target.value);
+                setPage(1);
+              }}
+              placeholder="Ex.: Ana Silva ou 12345"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+            />
+          </div>
+        </div>
 
         {loading && (
           <div className="rounded-2xl bg-white p-8 text-center text-slate-500 shadow-md">
@@ -197,15 +276,21 @@ export default function AdminConclusoesPage() {
                     <th className="px-4 py-3">Estado</th>
                     <th className="px-4 py-3">Cidade</th>
                     <th className="px-4 py-3">WhatsApp</th>
-                    <th className="px-4 py-3">Número do pedido</th>
+                    <th className="px-4 py-3">Numero do pedido</th>
                     <th className="px-4 py-3">Print Strava</th>
-                    <th className="px-4 py-3 text-center">Confirmar</th>
-                    <th className="px-4 py-3 text-center">Ações</th>
+                    <th className="px-4 py-3 text-center">Status</th>
+                    <th className="px-4 py-3 text-center">Acoes</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
-                  {records.map((record, index) => {
+                  {pageItems.map((record, index) => {
                     const rowBg = index % 2 === 0 ? "bg-white" : "bg-slate-50";
+                    const isConfirmed = Boolean(record.is_confirmed);
+                    const badgeClasses = isConfirmed
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-slate-100 text-slate-600";
+                    const badgeLabel = isConfirmed ? "Confirmado" : "Pendente";
+
                     return (
                       <tr key={record.id} className={rowBg}>
                         <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">
@@ -214,45 +299,60 @@ export default function AdminConclusoesPage() {
                         <td className="px-4 py-3">
                           {record.challenge_name?.trim() ||
                             record.challenge_slug ||
-                            "—"}
+                            "-"}
                         </td>
                         <td className="px-4 py-3 font-semibold text-slate-900">
                           {record.full_name}
                         </td>
-                        <td className="px-4 py-3">{record.state || "—"}</td>
-                        <td className="px-4 py-3">{record.city || "—"}</td>
+                        <td className="px-4 py-3">{record.state || "-"}</td>
+                        <td className="px-4 py-3">{record.city || "-"}</td>
                         <td className="px-4 py-3">
                           {formatWhatsapp(record.whatsapp)}
                         </td>
                         <td className="px-4 py-3">
-                          {record.order_number || "—"}
+                          {record.order_number || "-"}
                         </td>
                         <td className="px-4 py-3">
                           {record.strava_screenshot_url ? (
-                            <button
-                              type="button"
-                              onClick={() => openImageModal(record)}
-                              className="group inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                            >
-                              <img
-                                src={record.strava_screenshot_url}
-                                alt={`Print do Strava de ${record.full_name}`}
-                                className="h-14 w-20 rounded-lg border border-slate-200 object-cover transition group-hover:scale-[1.02]"
-                              />
-                            </button>
+                            <div className="flex flex-col items-start gap-2">
+                              <button
+                                type="button"
+                                onClick={() => openImageModal(record)}
+                                className="group inline-flex items-center outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                              >
+                                <img
+                                  src={record.strava_screenshot_url}
+                                  alt={`Print do Strava de ${record.full_name}`}
+                                  className="h-14 w-20 rounded-lg border border-slate-200 object-cover transition group-hover:scale-[1.02]"
+                                />
+                              </button>
+                              <a
+                                href={record.strava_screenshot_url}
+                                download
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-xs font-semibold text-emerald-600 underline hover:text-emerald-500"
+                              >
+                                Baixar
+                              </a>
+                            </div>
                           ) : (
-                            <span className="text-slate-400">—</span>
+                            <span className="text-slate-400">-</span>
                           )}
                         </td>
                         <td className="px-4 py-3 text-center">
-                          <input
-                            type="checkbox"
-                            className="h-5 w-5 rounded border-slate-300 text-emerald-500 focus:ring-emerald-400"
-                            checked={Boolean(record.is_confirmed)}
-                            onChange={() => toggleConfirmation(record)}
+                          <button
+                            type="button"
+                            onClick={() => toggleConfirmation(record)}
                             disabled={updatingId === record.id}
-                            aria-label={`Marcar ${record.full_name} como confirmado`}
-                          />
+                            className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold transition ${
+                              updatingId === record.id
+                                ? "opacity-60"
+                                : "hover:opacity-90"
+                            } ${badgeClasses}`}
+                          >
+                            {updatingId === record.id ? "Atualizando..." : badgeLabel}
+                          </button>
                         </td>
                         <td className="px-4 py-3 text-center">
                           <button
@@ -268,18 +368,69 @@ export default function AdminConclusoesPage() {
                     );
                   })}
 
-                  {records.length === 0 && (
+                  {filteredRecords.length === 0 && (
                     <tr>
                       <td
                         colSpan={10}
                         className="px-4 py-8 text-center text-slate-400"
                       >
-                        Nenhum registro encontrado.
+                        {emptyMessage}
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
+            </div>
+
+            <div className="mt-4 flex flex-col gap-4 border-t border-slate-100 px-2 pt-4 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+              <p>
+                {totalRecords === 0
+                  ? "Mostrando 0 de 0 registros"
+                  : `Mostrando ${displayStart}-${displayEnd} de ${totalRecords} registros`}
+              </p>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                    disabled={page === 1}
+                    className="rounded-full border border-slate-300 px-4 py-1 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Anterior
+                  </button>
+                  <span>
+                    Pagina {totalRecords === 0 ? 0 : page} de{" "}
+                    {totalRecords === 0 ? 0 : totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setPage((prev) => Math.min(totalPages, prev + 1))
+                    }
+                    disabled={page >= totalPages || totalRecords === 0}
+                    className="rounded-full border border-slate-300 px-4 py-1 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    Proxima
+                  </button>
+                </div>
+                <label className="flex items-center gap-2 text-sm">
+                  Por pagina
+                  <select
+                    value={pageSize}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setPage(1);
+                    }}
+                    className="rounded-lg border border-slate-300 px-2 py-1 text-sm text-slate-900 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+                  >
+                    {PAGE_SIZE_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
         )}
