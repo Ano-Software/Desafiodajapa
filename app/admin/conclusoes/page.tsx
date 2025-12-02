@@ -22,6 +22,8 @@ type ModalImage = {
   label: string;
 };
 
+type StatusFilter = "all" | "confirmed" | "pending";
+
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
 const formatDateTime = (value: string) =>
@@ -53,6 +55,7 @@ export default function AdminConclusoesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
 
   useEffect(() => {
     loadData();
@@ -60,16 +63,26 @@ export default function AdminConclusoesPage() {
 
   const filteredRecords = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) {
-      return records;
+    const bySearch = term
+      ? records.filter((record) => {
+          const fullName = record.full_name?.toLowerCase() ?? "";
+          const orderNumber = record.order_number?.toLowerCase() ?? "";
+          return fullName.includes(term) || orderNumber.includes(term);
+        })
+      : records;
+
+    if (statusFilter === "all") {
+      return bySearch;
     }
 
-    return records.filter((record) => {
-      const fullName = record.full_name?.toLowerCase() ?? "";
-      const orderNumber = record.order_number?.toLowerCase() ?? "";
-      return fullName.includes(term) || orderNumber.includes(term);
+    return bySearch.filter((record) => {
+      const isConfirmed = Boolean(record.is_confirmed);
+      if (statusFilter === "confirmed") {
+        return isConfirmed;
+      }
+      return !isConfirmed;
     });
-  }, [records, searchTerm]);
+  }, [records, searchTerm, statusFilter]);
 
   useEffect(() => {
     const maxPage = Math.max(
@@ -249,6 +262,24 @@ export default function AdminConclusoesPage() {
               placeholder="Ex.: Ana Silva ou 12345"
               className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             />
+          </div>
+
+          <div className="w-full sm:max-w-xs">
+            <label className="mb-1 block text-sm font-medium text-slate-600">
+              Filtrar por status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(event) => {
+                setStatusFilter(event.target.value as StatusFilter);
+                setPage(1);
+              }}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-200"
+            >
+              <option value="all">Todos</option>
+              <option value="pending">Pendentes</option>
+              <option value="confirmed">Confirmados</option>
+            </select>
           </div>
         </div>
 

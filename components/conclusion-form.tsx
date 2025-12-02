@@ -97,7 +97,7 @@ export default function ConclusionFormPage() {
         const file = files?.[0];
         if (!file) return "Envie o print do Strava.";
         return (
-          file.size <= MAX_FILE_SIZE || "A imagem deve ter no m+íximo 5MB."
+          file.size <= MAX_FILE_SIZE || "A imagem deve ter no máximo 5MB."
         );
       },
       isImage: (files) => {
@@ -141,7 +141,7 @@ export default function ConclusionFormPage() {
 
       if (uploadError) {
         throw new Error(
-          `N+úo foi poss+¡vel enviar sua imagem. (${uploadError.message})`
+          `Não foi possível enviar sua imagem. (${uploadError.message})`
         );
       }
 
@@ -166,7 +166,7 @@ export default function ConclusionFormPage() {
 
       if (insertError) {
         throw new Error(
-          `N+úo foi poss+¡vel salvar suas informa+º+Áes. (${insertError.message})`
+          `Não foi possível salvar suas informações. (${insertError.message})`
         );
       }
 
@@ -186,7 +186,7 @@ export default function ConclusionFormPage() {
       const message =
         error instanceof Error
           ? error.message
-          : "Houve um problema ao registrar sua conclus+úo. Tente novamente.";
+          : "Houve um problema ao registrar sua Conclusão. Tente novamente.";
       setStatus({ type: "error", message });
     } finally {
       setIsSubmitting(false);
@@ -207,14 +207,14 @@ export default function ConclusionFormPage() {
               priority
             />
             <p className="mt-6 text-xs font-semibold uppercase tracking-[0.35em] text-emerald-600">
-              Conclus+úo de desafio
+              Conclusão de desafio
             </p>
             <h1 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl">
               {displayedChallengeName}
             </h1>
             <p className="mt-3 max-w-2xl text-sm text-slate-600 sm:text-base">
               Preencha os dados abaixo e envie o print do seu Strava para
-              registrar a conclus+úo deste desafio virtual. Seu resultado ser+í
+              registrar a Conclusão deste desafio virtual. Seu resultado será
               salvo no sistema do grupo de corridas Superando Limites.
             </p>
           </div>
@@ -223,7 +223,7 @@ export default function ConclusionFormPage() {
             <div className="mt-8 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
               <CheckCircle2 className="h-5 w-5 text-emerald-500" aria-hidden />
               <p>
-                Conclus+úo registrada com sucesso! Obrigado por participar do
+                Conclusão registrada com sucesso! Obrigado por participar do
                 Desafio da Japa / Superando Limites.
               </p>
             </div>
@@ -360,12 +360,12 @@ export default function ConclusionFormPage() {
 
               <div>
                 <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
-                  <span>N+¦mero do pedido na loja</span>
+                  <span>Número do pedido na loja</span>
                   <input
                     type="text"
                     autoComplete="off"
                     {...register("orderNumber", {
-                      required: "Informe o n+¦mero do pedido.",
+                      required: "Informe o número do pedido.",
                     })}
                     className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder-slate-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
                   />
@@ -409,7 +409,7 @@ export default function ConclusionFormPage() {
                     )}
                   </div>
                   <p className="mt-2 text-xs text-slate-500">
-                    Envie o print do Strava ou app de corrida (at+® 5MB).
+                    Envie o print do Strava ou app de corrida (até 5MB).
                   </p>
                 </div>
               </label>
@@ -431,19 +431,14 @@ export default function ConclusionFormPage() {
                   Enviando...
                 </>
               ) : (
-                "Enviar conclus+úo"
+                "Enviar Conclusão"
               )}
             </button>
           </form>
         </div>
-        <a
-          href="/admin/login"
-          className="text-xs text-slate-400 underline decoration-dotted hover:text-slate-500"
-        >
-          admin
-        </a>
       </main>
     </div>
   );
 }
+
 

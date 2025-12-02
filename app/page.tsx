@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import { headers } from "next/headers";
 import ConclusionFormPage from "@/components/conclusion-form";
 
@@ -29,7 +29,7 @@ function HomeLanding() {
         </p>
 
         <h1 className="text-2xl font-semibold leading-tight text-slate-900">
-          Corridas Virtuais - Grupo de Corridas Superando Limites
+          Corridas Virtuais – Grupo de Corridas Superando Limites
         </h1>
 
         <p className="text-sm text-slate-600 leading-relaxed">
