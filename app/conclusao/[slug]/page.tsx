@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Loader2, CheckCircle2, AlertCircle, Upload } from "lucide-react";
@@ -16,6 +15,7 @@ type PageProps = {
 };
 
 type FormValues = {
+  challengeName: string;
   fullName: string;
   state: string;
   city: string;
@@ -50,41 +50,7 @@ function formatWhatsapp(input: string) {
 export default function ChallengeConclusionPage({ params }: PageProps) {
   const slug = params.slug ?? "";
   const challenge = getChallengeBySlug(slug);
-
-  if (!challenge) {
-    return (
-      <div className="min-h-screen bg-slate-50 text-slate-900">
-        <main className="mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-4 py-12 space-y-4">
-          <div className="w-full max-w-3xl rounded-3xl border border-slate-200 bg-white/95 p-8 shadow-xl shadow-slate-200/70 sm:p-10 text-center">
-            <p className="text-3xl font-bold text-red-600">
-              Desafio nao encontrado
-            </p>
-            <p className="mt-4 text-sm text-slate-600 sm:text-base">
-              O link acessado nao corresponde a um desafio ativo. Verifique o
-              endereco ou retorne para a pagina inicial para escolher outro
-              desafio.
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/"
-                className="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-              >
-                Voltar para a pagina inicial
-              </Link>
-            </div>
-          </div>
-          <a
-            href="/admin/login"
-            className="text-xs text-slate-400 underline decoration-dotted hover:text-slate-500"
-          >
-            admin
-          </a>
-        </main>
-      </div>
-    );
-  }
-
-  const challengeName = challenge.name;
+  const challengeName = challenge?.name ?? "Desafio virtual";
 
   const {
     register,
@@ -95,6 +61,7 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
+      challengeName: "",
       fullName: "",
       state: "",
       city: "",
@@ -183,7 +150,7 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
         .from("challenge_completions")
         .insert({
           challenge_slug: slug,
-          challenge_name: challengeName,
+          challenge_name: values.challengeName,
           full_name: values.fullName,
           state: values.state,
           city: values.city,
@@ -199,6 +166,7 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
       }
 
       reset({
+        challengeName: "",
         fullName: "",
         state: "",
         city: "",
@@ -264,7 +232,24 @@ export default function ChallengeConclusionPage({ params }: PageProps) {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-6">
-            <input type="hidden" name="challenge_slug" value={slug} readOnly />
+            <div>
+              <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
+                <span>Nome do desafio</span>
+                <input
+                  type="text"
+                  autoComplete="off"
+                  {...register("challengeName", {
+                    required: "Informe o nome do desafio.",
+                  })}
+                  className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder-slate-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/40"
+                />
+              </label>
+              {errors.challengeName && (
+                <span className="mt-1 block text-xs text-red-600">
+                  {errors.challengeName.message}
+                </span>
+              )}
+            </div>
             <div>
               <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
                 <span>Nome completo</span>

@@ -11,6 +11,14 @@ export type ChallengeListItem = ChallengeInfo & {
 
 const CHALLENGE_DATA: ChallengeListItem[] = [
   {
+    slug: "hulk-desafio",
+    name: "Desafio do Hulk",
+    description:
+      "Percurso de forca inspirado no Hulk para desafiar sua resistencia.",
+    badge: "Serie Especial",
+    highlight: "Percurso livre",
+  },
+  {
     slug: "thor-novembro-25",
     name: "Desafio Thor Novembro 25",
     description:
