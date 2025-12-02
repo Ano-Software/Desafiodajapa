@@ -5,11 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Loader2, CheckCircle2, AlertCircle, Upload } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { getSupabaseBrowserClient } from "@/lib/supabase-client";
-
-type ChallengeInfo = {
-  slug: string;
-  name: string;
-};
+import { ChallengeInfo } from "@/lib/challenges";
 
 type ChallengeFormProps = {
   slug: string;
@@ -211,6 +207,7 @@ export function ChallengeForm({ slug, challenge }: ChallengeFormProps) {
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <input type="hidden" name="challenge_slug" value={slug} readOnly />
         <div>
           <label className="flex flex-col space-y-1 text-sm font-medium text-slate-700">
             <span>Nome completo</span>
