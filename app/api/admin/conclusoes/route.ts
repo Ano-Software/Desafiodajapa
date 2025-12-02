@@ -90,7 +90,7 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = getSupabaseAdminClient();
     const { data, error } = await supabase
-      .from<ChallengeCompletion>(TABLE_NAME)
+      .from(TABLE_NAME)
       .select("*")
       .eq("status", "active")
       .order("created_at", { ascending: false });
@@ -99,12 +99,14 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
+    const challengeCompletions = (data ?? []) as ChallengeCompletion[];
+
     const wantsCsv =
       request.nextUrl.searchParams.get("format")?.toLowerCase().includes("csv") ||
       false;
 
     if (wantsCsv) {
-      const csv = toCsv(data ?? []);
+      const csv = toCsv(challengeCompletions);
       return new NextResponse(csv, {
         status: 200,
         headers: {
@@ -114,7 +116,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ data: data ?? [] });
+    return NextResponse.json({ data: challengeCompletions });
   } catch (error) {
     console.error("GET /api/admin/conclusoes error:", error);
     return NextResponse.json(
@@ -142,7 +144,7 @@ export async function PATCH(request: NextRequest) {
 
     const supabase = getSupabaseAdminClient();
     const { data, error } = await supabase
-      .from<ChallengeCompletion>(TABLE_NAME)
+      .from(TABLE_NAME)
       .update({ status: "archived" })
       .eq("id", id)
       .select()
@@ -152,7 +154,9 @@ export async function PATCH(request: NextRequest) {
       throw error;
     }
 
-    return NextResponse.json({ data });
+    const updatedCompletion = data as ChallengeCompletion | null;
+
+    return NextResponse.json({ data: updatedCompletion });
   } catch (error) {
     console.error("PATCH /api/admin/conclusoes error:", error);
     return NextResponse.json(
